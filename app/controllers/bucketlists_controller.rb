@@ -28,7 +28,7 @@ class BucketlistsController < ApplicationController
   private
 
   def bucketlist_params
-    params.permit(:name, :created_by)
+    params.permit(:title, :created_by)
   end
 
   def set_bucketlist
