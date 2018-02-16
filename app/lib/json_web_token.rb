@@ -1,9 +1,9 @@
 class JsonWebToken
-  HMAC_SECRET = Rails.applicaition.secrets.secret_key_base
+  HMAC_SECRET = Rails.application.secrets.secret_key_base
 
-  def slef.encode(payload, exp = 72.hours.from_now)
+  def self.encode(payload, exp = 72.hours.from_now)
     payload[:exp] = exp.to_i
-    Jwt.encode(payload, HMAC_SECRET)
+    JWT.encode(payload, HMAC_SECRET)
   end
 
   def self.decode(token)
