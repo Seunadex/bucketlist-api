@@ -2,12 +2,12 @@ class BucketlistsController < ApplicationController
   before_action :set_bucketlist, only: %i(show update destroy)
 
   def index
-    @bucketlists = Bucketlist.all
+    @bucketlists = current_user.bucketlists
     json_response(@bucketlists)
   end
 
   def create
-    @bucketlist = Bucketlist.create!(bucketlist_params)
+    @bucketlist = current_user.bucketlists.create!(bucketlist_params)
     json_response(@bucketlist, :created)
   end
 
@@ -17,7 +17,10 @@ class BucketlistsController < ApplicationController
 
   def update
     @bucketlist.update(bucketlist_params)
-    head :no_content
+    json_response(
+      message: "Updated",
+      bucketlist: @bucketlist
+    )
   end
 
   def destroy
