@@ -5,6 +5,9 @@ module V1
     def index
       @bucketlists = current_user.bucketlists
       json_response(@bucketlists)
+      if current_user.id != @bucketlists[0].created_by.to_i
+        "Unauthorized"
+      end
     end
 
     def create
@@ -13,20 +16,43 @@ module V1
     end
 
     def show
-      json_response(@bucketlist)
+      if check_owner
+        json_response({ message: "Unauthorized access", status: 403 })
+      else
+        json_response(@bucketlist)
+      end
     end
 
     def update
-      @bucketlist.update(bucketlist_params)
-      json_response(
-        message: "Updated",
-        bucketlist: @bucketlist
-      )
+      if check_owner
+        json_response({
+          message: "Oops Sorry You can not edit this bucketlist",
+          status: 403
+        })
+      else
+        @bucketlist.update(bucketlist_params)
+        json_response(
+          message: "Updated",
+          bucketlist: @bucketlist
+        )
+      end
     end
 
     def destroy
-      @bucketlist.destroy
-      head :no_content
+      if check_owner
+        json_response({
+          message: "What do you think you want to do? nah cmon!!"
+        })
+      else
+        @bucketlist.destroy
+        json_response({
+          message: "Successfully deleted you bucketlist"
+        })
+      end
+    end
+
+    def check_owner
+      current_user.id != @bucketlist.created_by.to_i
     end
 
     private
