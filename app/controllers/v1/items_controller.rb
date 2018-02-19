@@ -4,11 +4,19 @@ module V1
     before_action :set_bucketlist_item, only: %i(show update destroy)
 
     def index
-      json_response(@bucketlist.items)
+      if check_owner
+        json_response({ message: "Unauthorized access", status: 403 })
+      else
+        json_response(@bucketlist.items)
+      end
     end
 
     def show
-      json_response(@item)
+      if check_owner
+        json_response({ message: "Unauthorized access", status: 403 })
+      else
+        json_response(@item)
+      end
     end
 
     def create
@@ -22,9 +30,20 @@ module V1
     end
 
     def destroy
-      @item.destroy
-      head :no_content
+      if check_owner
+        json_response({ message: "Unauthorized access", status: 403 })
+      else
+        @item.destroy
+        json_response({
+          message: "Successfully deleted you item"
+        })
+      end
     end
+
+    def check_owner
+      current_user.id != @bucketlist.created_by.to_i
+    end
+
 
     private
 
@@ -33,11 +52,11 @@ module V1
     end
 
     def set_bucketlist
-      @bucketlist = Bucketlist.find(params[:bucketlist_id])
+      @bucketlist = Bucketlist.find(params[:bucketlist_id]) 
     end
 
     def set_bucketlist_item
-      @item = @bucketlist.items.find_by!(id: params[:id]) if @bucketlist
+      @item = @bucketlist.items.find_by!(id: params[:id])if @bucketlist
     end
   end
 end
