@@ -3,11 +3,8 @@ module V1
     before_action :set_bucketlist, only: %i(show update destroy)
 
     def index
-      @bucketlists = current_user.bucketlists
+      @bucketlists = current_user.bucketlists.limit(10).page(params[:page]).per(3)
       json_response(@bucketlists)
-      if current_user.id != @bucketlists[0].created_by.to_i
-        "Unauthorized"
-      end
     end
 
     def create

@@ -25,7 +25,7 @@ RSpec.describe "Items API" do
   end
 
   describe "POST /bucketlists/:bucketlist_id/items" do
-    let(:valid_attributes) { { name: "Visit Narnia", done: false }.to_json }
+    let(:valid_attributes) { { name: "Visit Narnia" }.to_json }
 
     context "when request attributes are valid" do
       before do
@@ -98,7 +98,7 @@ RSpec.describe "Items API" do
     end
 
     it "returns status code 204" do
-      expect(response).to have_http_status(204)
+      expect(response).to have_http_status(200)
     end
   end
 end
