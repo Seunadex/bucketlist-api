@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :bucketlists do
-    resources :items
+  scope module: :v2, constraints: ApiVersion.new('v2') do
+    resources :bucketlist, only: :index
+  end
+
+  scope module: :v1, constraints: ApiVersion.new('v1', true) do
+    resources :bucketlists do
+      resources :items
+    end
   end
 
   post 'auth/login', to: 'authentication#authenticate'
