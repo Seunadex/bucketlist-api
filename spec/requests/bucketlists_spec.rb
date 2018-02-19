@@ -120,7 +120,11 @@ RSpec.describe "Bucketlists API", type: :request do
     end
 
     it "returns status code 204" do
-      expect(response).to have_http_status(204)
+      expect(response).to have_http_status(200)
+    end
+
+    it "returns success message" do
+      expect(response.body).to match(/{\"message\":\"Successfully deleted you bucketlist\"}/)
     end
   end
 end
